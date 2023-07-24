@@ -72,21 +72,11 @@ class Autobus:
             lines = file.readlines()
         return lines
     
-    #Сортировка по номеру
-    def sort_by_number(autobus_list):
-        routes = []
-        with io.open(file_name, 'r', encoding='utf-8') as file:
-            lines = file.readlines()
+    @staticmethod
+    def sort_by_number_desc(autobus_list):
+        sorted_autopark = sorted(autobus_list, key=lambda autobus: autobus.get_number_trace(), reverse=True)
+        return sorted_autopark
 
-        for line in lines:
-            line = line.strip()
-            if line.startswith("Номер маршрута"):
-                route_number = line.split(": ")[1]
-                routes.append(route_number)
-
-        sorted_routes = sorted(routes, reverse=True)
-
-        return sorted_routes
 
     @staticmethod
     def read_from_file(file_name):
@@ -130,6 +120,7 @@ class Autobus:
 
         return autobus_list
     
+    
     @staticmethod
     def search_by_stop(autopark, stop_name):
         matching_autobuses = []
@@ -157,13 +148,6 @@ def show_autopark_menu():
     for line in file_lines:
         print(line.strip())
 
-# Меню для сортировки
-def sort_by_number_menu(autopark):
-    sorted_autopark = Autobus.sort_by_number(autopark)
-    print("Список автобусов, отсортированных по номеру маршрута:")
-    for bus in sorted_autopark:
-        print(bus.get_info())
-
 # Меню для чтения из файла
 def read_from_file_menu():
     file_name = input("Введите имя файла для чтения информации об автобусах: ")
@@ -180,6 +164,13 @@ def search_by_stop_menu(autopark):
             print(autobus.get_info())
     else:
         print(f"Нет информации об автобусах, начинающихся или заканчивающихся по параметрам '{stop_name}'.")
+
+# Меню для сортировки по номеру маршрута
+def sort_by_number_menu(autopark):
+    sorted_autopark = Autobus.sort_by_number_desc(autopark)
+    print("Список автобусов, отсортированных по номеру маршрута (по убыванию):")
+    for bus in sorted_autopark:
+        print(bus.get_info())
 
 # Главное меню
 def main_menu():
