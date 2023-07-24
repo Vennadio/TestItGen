@@ -138,48 +138,91 @@ class Autobus:
                 matching_autobuses.append(autobus)
         return matching_autobuses
 
+#Решил создать методы вне класса
+# Меню
+def create_autopark_menu():
+    autopark = Autobus.create_autopark()
+    print("Автопарк успешно создан!")
+    return autopark
 
+# Меню для сохранения в файл
+def save_to_file_menu(autopark):
+    file_name = input("Введите имя файла для сохранения информации об автобусах: ")
+    Autobus.save_to_file(autopark, file_name)
 
-# Создание экземпляра класса Autobus
-my_bus = Autobus("Минск", "Брест", "Маршрут №516", "2h 26min")
+# Меню для отображения автопарка
+def show_autopark_menu():
+    file_name = input("Введите имя файла с информацией об автобусах: ")
+    file_lines = Autobus.show_autopark(file_name)
+    for line in file_lines:
+        print(line.strip())
 
-# Использование геттеров для получения значений полей
-print(my_bus.get_begin_dir()) 
-print(my_bus.get_end_dir()) 
+# Меню для сортировки
+def sort_by_number_menu(autopark):
+    sorted_autopark = Autobus.sort_by_number(autopark)
+    print("Список автобусов, отсортированных по номеру маршрута:")
+    for bus in sorted_autopark:
+        print(bus.get_info())
 
-info = my_bus.get_info()
+# Меню для чтения из файла
+def read_from_file_menu():
+    file_name = input("Введите имя файла для чтения информации об автобусах: ")
+    autopark = Autobus.read_from_file(file_name)
+    return autopark
 
-print(info)
+# Меню по поиску имени остановки
+def search_by_stop_menu(autopark):
+    stop_name = input("Введите название пункта остановки: ")
+    matching_autobuses = Autobus.search_by_stop(autopark, stop_name)
+    if len(matching_autobuses) > 0:
+        print(f"Автобусы, начинающиеся или заканчивающиеся в пункте '{stop_name}':")
+        for autobus in matching_autobuses:
+            print(autobus.get_info())
+    else:
+        print(f"Нет информации об автобусах, начинающихся или заканчивающихся по параметрам '{stop_name}'.")
 
-# Создание маршрутов
-autopark = Autobus.create_autopark()
-
-# Сохранение информации об автобусах в файл
-Autobus.save_to_file(autopark, 'autobus_info.txt')
-
-
-file_lines = Autobus.show_autopark('autobus_info.txt')
-
-# Вывод информации на экран
-for line in file_lines:
-    print(line.strip())
-
-
-
-# Чтение информации из файла
-autopark = Autobus.read_from_file('autobus_info.txt')
-
-# Ввод названия пункта пользователем
-stop_name = input("Введите название пункта остановки: ")
-
-# Поиск автобусов по пункту остановки
-matching_autobuses = Autobus.search_by_stop(autopark, stop_name)
-
-# Вывод информации об автобусах
-if len(matching_autobuses) > 0:
-    print(f"Автобусы, начинающиеся или заканчивающиеся в пункте '{stop_name}':")
-    for autobus in matching_autobuses:
-        info = autobus.get_info()
-        print(info)
-else:
-    print(f"Нет информации об автобусах, начинающихся или заканчивающихся в пункте '{stop_name}'.")
+# Главное меню
+def main_menu():
+    autopark = []
+    while True:
+        print("----------- Главное меню -----------")
+        print("1. Создать автопарк")
+        print("2. Сохранить информацию об автобусах в файл")
+        print("3. Вывести информацию об автобусах из файла")
+        print("4. Сортировать автобусы по номеру маршрута")
+        print("5. Читать информацию об автобусах из файла")
+        print("6. Поиск автобусов по пункту остановки")
+        print("7. Выход")
+        
+        choice = input("Выберите действие (введите соответствующую цифру): ")
+        
+        if choice == "1":
+            autopark = create_autopark_menu()
+        elif choice == "2":
+            if autopark:
+                save_to_file_menu(autopark)
+            else:
+                print("Сначала нужно создать автопарк!")
+        elif choice == "3":
+            show_autopark_menu()
+        elif choice == "4":
+            if autopark:
+                sort_by_number_menu(autopark)
+            else:
+                print("Сначала нужно создать автопарк!")
+        elif choice == "5":
+            autopark = read_from_file_menu()
+        elif choice == "6":
+            if autopark:
+                search_by_stop_menu(autopark)
+            else:
+                print("Сначала нужно создать автопарк!")
+        elif choice == "7":
+            print("Выход из программы.")
+            break
+        else:
+            print("Некорректный выбор. Пожалуйста, введите цифру от 1 до 7.")
+            
+if __name__ == "__main__":
+    main_menu()
+    
